@@ -62,12 +62,32 @@ class ApplicationCommand extends Base {
       this.name = data.name;
     }
 
+    if ('name_localizations' in data) {
+      /**
+       * The name localizations for this command
+       * @type {?Object<string, string>}
+       */
+      this.nameLocalizations = data.name_localizations;
+    } else {
+      this.nameLocalizations ??= null;
+    }
+
     if ('description' in data) {
       /**
        * The description of this command
        * @type {string}
        */
       this.description = data.description;
+    }
+
+    if ('description_localizations' in data) {
+      /**
+       * The description localizations for this command
+       * @type {?Object<string, string>}
+       */
+      this.descriptionLocalizations = data.description_localizations;
+    } else {
+      this.descriptionLocalizations ??= null;
     }
 
     if ('options' in data) {
@@ -129,7 +149,10 @@ class ApplicationCommand extends Base {
    * @typedef {Object} ApplicationCommandData
    * @property {string} name The name of the command, must be in all lowercase if type is
    * {@link ApplicationCommandType.ChatInput}
+   * @property {Object<string, string>} [nameLocalizations] The localizations for the command name
    * @property {string} description The description of the command, if type is {@link ApplicationCommandType.ChatInput}
+   * @property {Object<string, string>} [descriptionLocalizations] The localizations for the command description,
+   * if type is {@link ApplicationCommandType.ChatInput}
    * @property {ApplicationCommandType} [type=ApplicationCommandType.ChatInput] The type of the command
    * @property {ApplicationCommandOptionData[]} [options] Options for the command
    * @property {boolean} [defaultPermission=true] Whether the command is enabled by default when the app is added to a
@@ -145,7 +168,9 @@ class ApplicationCommand extends Base {
    * @typedef {Object} ApplicationCommandOptionData
    * @property {ApplicationCommandOptionType} type The type of the option
    * @property {string} name The name of the option
+   * @property {Object<string, string>} [nameLocalizations] The name localizations for the option
    * @property {string} description The description of the option
+   * @property {Object<string, string>} [descriptionLocalizations] The description localizations for the option
    * @property {boolean} [autocomplete] Whether the autocomplete interaction is enabled for a
    * {@link ApplicationCommandOptionType.String}, {@link ApplicationCommandOptionType.Integer} or
    * {@link ApplicationCommandOptionType.Number} option
@@ -186,12 +211,46 @@ class ApplicationCommand extends Base {
   }
 
   /**
+   * Edits the localized names of this ApplicationCommand
+   * @param {Object<string, string>} nameLocalizations The new localized names for the command
+   * @returns {Promise<ApplicationCommand>}
+   * @example
+   * // Edit the name localizations of this command
+   * command.setLocalizedNames({
+   *   'en-GB': 'test',
+   *   'pt-BR': 'teste',
+   * })
+   *   .then(console.log)
+   *   .catch(console.error)
+   */
+  setNameLocalizations(nameLocalizations) {
+    return this.edit({ nameLocalizations });
+  }
+
+  /**
    * Edits the description of this ApplicationCommand
    * @param {string} description The new description of the command
    * @returns {Promise<ApplicationCommand>}
    */
   setDescription(description) {
     return this.edit({ description });
+  }
+
+  /**
+   * Edits the localized descriptions of this ApplicationCommand
+   * @param {Object<string, string>} descriptionLocalizations The new localized descriptions for the command
+   * @returns {Promise<ApplicationCommand>}
+   * @example
+   * // Edit the description localizations of this command
+   * command.setLocalizedDescriptions({
+   *   'en-GB': 'A test command',
+   *   'pt-BR': 'Um comando de teste',
+   * })
+   *   .then(console.log)
+   *   .catch(console.error)
+   */
+  setDescriptionLocalizations(descriptionLocalizations) {
+    return this.edit({ descriptionLocalizations });
   }
 
   /**
@@ -381,10 +440,14 @@ class ApplicationCommand extends Base {
     const channelTypesKey = received ? 'channelTypes' : 'channel_types';
     const minValueKey = received ? 'minValue' : 'min_value';
     const maxValueKey = received ? 'maxValue' : 'max_value';
+    const nameLocalizationsKey = received ? 'nameLocalizations' : 'name_localizations';
+    const descriptionLocalizationsKey = received ? 'descriptionLocalizations' : 'description_localizations';
     return {
       type: option.type,
       name: option.name,
+      [nameLocalizationsKey]: option.nameLocalizations ?? option.name_localizations,
       description: option.description,
+      [descriptionLocalizationsKey]: option.descriptionLocalizations ?? option.description_localizations,
       required:
         option.required ??
         (option.type === ApplicationCommandOptionType.Subcommand ||

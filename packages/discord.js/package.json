@@ -47,9 +47,9 @@
   },
   "homepage": "https://discord.js.org",
   "dependencies": {
-    "@discordjs/builders": "^0.13.0-dev",
-    "@discordjs/collection": "^0.6.0-dev",
-    "@discordjs/rest": "^0.4.0-dev",
+    "@discordjs/builders": "https://gitpkg.now.sh/wjdgustn/discord.js/packages/builders?main",
+    "@discordjs/collection": "https://gitpkg.now.sh/wjdgustn/discord.js/packages/collection?main",
+    "@discordjs/rest": "https://gitpkg.now.sh/wjdgustn/discord.js/packages/rest?main",
     "@sapphire/snowflake": "^3.1.0",
     "@types/ws": "^8.2.2",
     "discord-api-types": "^0.30.0",

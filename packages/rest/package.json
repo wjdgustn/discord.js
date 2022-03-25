@@ -50,7 +50,7 @@
 	},
 	"homepage": "https://discord.js.org",
 	"dependencies": {
-		"@discordjs/collection": "workspace:^",
+		"@discordjs/collection": "https://gitpkg.now.sh/wjdgustn/discord.js/packages/collection?main",
 		"@sapphire/async-queue": "^1.2.0",
 		"@sapphire/snowflake": "^3.1.0",
 		"@types/node-fetch": "^2.5.12",
